@@ -311,15 +311,15 @@ paths:
         "500":
           description: Internal server error
 
-  /api/sdk/status:
+  /api/sdk/status/{txid}:
     get:
       tags:
         - SDK
       summary: Order Status
       description: Get Order Status
       parameters:
-        - in: params
-          name: txId
+        - in: path
+          name: txid
           required: false
           schema:
             type: string
@@ -330,6 +330,24 @@ paths:
           schema:
             type: string
           description: Input Hash
+        - in: query
+          name: sortBy
+          required: false
+          schema:
+            type: number
+          description: Sort 0 for ascending, 1 for descending
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: number
+          description: Limit per page
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: number
+          description: Page no.
         - in: header
           name: x-api-key
           required: true
