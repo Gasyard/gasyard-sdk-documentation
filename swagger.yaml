@@ -1,0 +1,155 @@
+openapi: 3.0.0
+info:
+  title: Gasyard SDK API
+  version: 1.0.0
+  description: API documentation for Gasyard Bridge SDK
+
+servers:
+  - url: https://api.gasyard.fi
+    description: Production server
+
+  - url: http://localhost:3000
+    description: Local server
+
+paths:
+  /api/sdk/quote:
+    get:
+      summary: Get quote
+      description: Get quote data for bridge tokens
+      parameters:
+        - in: query
+          name: outputNetwork
+          required: true
+          schema:
+            type: integer
+          description: Network ID of the output chain
+
+        - in: query
+          name: inputNetwork
+          required: true
+          schema:
+            type: integer
+          description: Network ID of the source chain
+
+        - in: query
+          name: outputTokenContract
+          required: false
+          schema:
+            type: string
+          description: Token Contract of ouptut chain
+
+        - in: query
+          name: inputTokenContract
+          required: false
+          schema:
+            type: string
+          description: Token Contract of input chain
+
+        - in: header
+          name: x-api-key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication
+
+      responses:
+        "200":
+          description: Successful bridge request
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: success
+                  inputTokenAmount: 123
+                  outputTokenAmount: 123
+                  outputValueInUSD: 12.34
+                  feesInToken: 123
+                  feesInUSD: 0.123
+                  rewardPoints: 1.23
+        "400":
+          description: Bad request (missing or invalid parameters)
+        "401":
+          description: Unauthorized (invalid API key)
+        "500":
+          description: Internal server error
+
+  /api/sdk/bridge:
+    get:
+      summary: Initiate bridge data
+      description: Bridges tokens from source to destination chain using SDK.
+      parameters:
+        - in: query
+          name: sourceNetwork
+          required: true
+          schema:
+            type: integer
+          description: Network ID of the source chain
+
+        - in: query
+          name: destinationNetwork
+          required: true
+          schema:
+            type: integer
+          description: Network ID of the destination chain
+
+        - in: query
+          name: tokenOutAddress
+          required: true
+          schema:
+            type: string
+          description: Token address on the destination chain
+
+        - in: query
+          name: destinationAddress
+          required: true
+          schema:
+            type: string
+          description: User wallet address on the destination chain
+
+        - in: query
+          name: tokenInAddress
+          required: true
+          schema:
+            type: string
+          description: Token address on the source chain
+
+        - in: query
+          name: sourceTokenAmount
+          required: true
+          schema:
+            type: string
+          description: Amount of tokens to bridge (in wei)
+
+        - in: query
+          name: sourceAddress
+          required: true
+          schema:
+            type: string
+          description: User wallet address on the source chain
+
+        - in: header
+          name: x-api-key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication
+
+      responses:
+        "200":
+          description: Successful bridge request
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: success
+                  transaction:
+                    data: "0x123..."
+                    to: "0x123.."
+        "400":
+          description: Bad request (missing or invalid parameters)
+        "401":
+          description: Unauthorized (invalid API key)
+        "500":
+          description: Internal server error
