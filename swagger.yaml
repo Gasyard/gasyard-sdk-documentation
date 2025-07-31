@@ -1,4 +1,4 @@
-openapi: 3.0.0
+swagger: "2.0"
 info:
   title: Gasyard SDK API
   version: 1.0.0
@@ -11,9 +11,61 @@ servers:
   - url: http://localhost:3000
     description: Local server
 
+tags:
+  - name: SDK
+    description: Endpoints related to bridging assets using the Gasyard SDK
+
 paths:
+  /api/sdk/config:
+    get:
+      tags:
+        - SDK
+      summary: Get config
+      description: Get config data for bridge tokens
+      parameters:
+        - in: query
+          name: chainID
+          required: false
+          schema:
+            type: integer
+            enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+          description: |
+            Network ID of the source chain. Options:
+            Available options:
+              - 1: Ethereum
+              - 2: Base
+              - 3: BNB
+              - 4: Arbitrum
+              - 5: HyperLiquid
+              - 6: Movement
+              - 7: Solana
+              - 8: Bera
+              - 9: Sei
+              - 10: Polygon
+        - in: header
+          name: x-api-key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication
+      responses:
+        "200":
+          description: Successful bridge request
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad request (missing or invalid parameters)
+        "401":
+          description: Unauthorized (invalid API key)
+        "500":
+          description: Internal server error
+
   /api/sdk/quote:
     get:
+      tags:
+        - SDK
       summary: Get quote
       description: Get quote data for bridge tokens
       parameters:
@@ -22,13 +74,27 @@ paths:
           required: true
           schema:
             type: integer
-          description: Network ID of the output chain
+            enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+          description: |
+            Network ID of the source chain. Options:
+            Available options:
+              - 1: Ethereum
+              - 2: Base
+              - 3: BNB
+              - 4: Arbitrum
+              - 5: HyperLiquid
+              - 6: Movement
+              - 7: Solana
+              - 8: Bera
+              - 9: Sei
+              - 10: Polygon
 
         - in: query
           name: inputNetwork
           required: true
           schema:
             type: integer
+            enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
           description: Network ID of the source chain
 
         - in: query
@@ -76,6 +142,8 @@ paths:
 
   /api/sdk/bridge:
     get:
+      tags:
+        - SDK
       summary: Initiate bridge data
       description: Bridges tokens from source to destination chain using SDK.
       parameters:
@@ -84,13 +152,27 @@ paths:
           required: true
           schema:
             type: integer
-          description: Network ID of the source chain
+            enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+          description: |
+            Network ID of the source chain. Options:
+            Available options:
+              - 1: Ethereum
+              - 2: Base
+              - 3: BNB
+              - 4: Arbitrum
+              - 5: HyperLiquid
+              - 6: Movement
+              - 7: Solana
+              - 8: Bera
+              - 9: Sei
+              - 10: Polygon
 
         - in: query
           name: destinationNetwork
           required: true
           schema:
             type: integer
+            enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
           description: Network ID of the destination chain
 
         - in: query
@@ -153,3 +235,78 @@ paths:
           description: Unauthorized (invalid API key)
         "500":
           description: Internal server error
+
+  /api/sdk/balance:
+    get:
+      tags:
+        - SDK
+      summary: Get balance
+      description: Get portfolio balance for user Address
+      parameters:
+        - in: query
+          name: userAddress
+          required: true
+          schema:
+            type: string
+          description: "address of user "
+        - in: header
+          name: x-api-key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication
+      responses:
+        "200":
+          description: Successful bridge request
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: success
+                  walletAssets: AssetBalance
+        "400":
+          description: Bad request (missing or invalid parameters)
+        "401":
+          description: Unauthorized (invalid API key)
+        "500":
+          description: Internal server error
+
+    /api/sdk/process-payment-quote:
+      get:
+        tags:
+          - SDK
+        summary: Process Payment Quote
+        description: Get Quote for merchant payment
+        parameters:
+          - in: query
+            name: userAddress
+            required: true
+            schema:
+              type: string
+            description: "address of user"
+          - in: query
+            name: amount
+            required: true
+            schema:
+              type: number
+            description: Amount to be deducted in USD
+          - in: header
+            name: x-api-key
+            required: true
+            schema:
+              type: string
+            description: API key for authentication
+        responses:
+          "200":
+            description: Successful quote request
+            content:
+              application/json:
+                schema:
+                  type: object
+          "400":
+            description: Bad request (missing or invalid parameters)
+          "401":
+            description: Unauthorized (invalid API key)
+          "500":
+            description: Internal server error
