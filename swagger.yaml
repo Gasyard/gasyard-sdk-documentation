@@ -272,41 +272,80 @@ paths:
         "500":
           description: Internal server error
 
-    /api/sdk/process-payment-quote:
-      get:
-        tags:
-          - SDK
-        summary: Process Payment Quote
-        description: Get Quote for merchant payment
-        parameters:
-          - in: query
-            name: userAddress
-            required: true
-            schema:
-              type: string
-            description: "address of user"
-          - in: query
-            name: amount
-            required: true
-            schema:
-              type: number
-            description: Amount to be deducted in USD
-          - in: header
-            name: x-api-key
-            required: true
-            schema:
-              type: string
-            description: API key for authentication
-        responses:
-          "200":
-            description: Successful quote request
-            content:
-              application/json:
-                schema:
-                  type: object
-          "400":
-            description: Bad request (missing or invalid parameters)
-          "401":
-            description: Unauthorized (invalid API key)
-          "500":
-            description: Internal server error
+  /api/sdk/process-payment-quote:
+    get:
+      tags:
+        - SDK
+      summary: Process Payment Quote
+      description: Get Quote for merchant payment
+      parameters:
+        - in: query
+          name: userAddress
+          required: true
+          schema:
+            type: string
+          description: "address of user"
+        - in: query
+          name: amount
+          required: true
+          schema:
+            type: number
+          description: Amount to be deducted in USD
+        - in: header
+          name: x-api-key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication
+      responses:
+        "200":
+          description: Successful quote request
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad request (missing or invalid parameters)
+        "401":
+          description: Unauthorized (invalid API key)
+        "500":
+          description: Internal server error
+
+  /api/sdk/status:
+    get:
+      tags:
+        - SDK
+      summary: Order Status
+      description: Get Order Status
+      parameters:
+        - in: params
+          name: txId
+          required: false
+          schema:
+            type: string
+          description: "Transaction Document id"
+        - in: query
+          name: sourceHash
+          required: false
+          schema:
+            type: string
+          description: Input Hash
+        - in: header
+          name: x-api-key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication
+      responses:
+        "200":
+          description: Successful Transaction status
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad request (missing or invalid parameters)
+        "401":
+          description: Unauthorized (invalid API key)
+        "500":
+          description: Internal server error
