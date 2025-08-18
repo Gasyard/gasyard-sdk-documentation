@@ -116,7 +116,7 @@ paths:
 
         - in: query
           name: inputTokenAmount
-          required: false
+          required: true
           schema:
             type: number
           description: Amount of tokens to bridge (in wei)
@@ -429,17 +429,38 @@ paths:
 
         - in: query
           name: inputTokenAmount
-          required: false
+          required: true
           schema:
             type: number
           description: Amount of tokens to bridge (in wei)
+
+        - in: query
+          name: sourceAddress
+          required: true
+          schema:
+            type: string
+          description: Address of Sender
+
+        - in: query
+          name: destinationAddress
+          required: true
+          schema:
+            type: string
+          description: Address of receiever
 
         - in: query
           name: slippage
           required: false
           schema:
             type: number
-          description: Slippage for quote
+          description: Slippage for quote in BPS
+
+        - in: query
+          name: showBridgeData
+          required: false
+          schema:
+            type: boolean
+          description: Flag to get bridge data - default is True
 
         - in: header
           name: x-api-key
@@ -463,6 +484,9 @@ paths:
                   feesInToken: 123
                   feesInUSD: 0.123
                   rewardPoints: 1.23
+                  priceImpact: 0.12
+                  minimumOutput: 123
+                  transaction: [data: { "0x123..." }]
         "400":
           description: Bad request (missing or invalid parameters)
         "401":
