@@ -105,8 +105,9 @@ paths:
           schema:
             type: string
           description: API key for authentication
+
         - in: query
-          name: outputNetwork
+          name: inputNetwork
           required: true
           schema:
             type: integer
@@ -126,7 +127,7 @@ paths:
               - 10: Polygon
 
         - in: query
-          name: inputNetwork
+          name: outputNetwork
           required: true
           schema:
             type: integer
@@ -134,14 +135,14 @@ paths:
           description: Network ID of the source chain
 
         - in: query
-          name: outputTokenContract
+          name: inputTokenContract
           required: false
           schema:
             type: string
           description: Token Contract of ouptut chain
 
         - in: query
-          name: inputTokenContract
+          name: outputTokenContract
           required: false
           schema:
             type: string
@@ -191,15 +192,26 @@ paths:
                 type: object
                 example:
                   message: success
-                  inputTokenAmount: 123
-                  outputTokenAmount: 123
-                  outputValueInUSD: 12.34
-                  feesInToken: 123
-                  feesInUSD: 0.123
-                  rewardPoints: 1.23
-                  priceImpact: 0.12
-                  minimumOutput: 123
-                  transaction: [data: "0x123..."]
+                  "inputTokenAmount": 20000000,
+                  "outputTokenAmount": 19996368.823009696,
+                  "outputTokenAmountRaw": 19.996368823009696,
+                  "outputValueInUSD": 19.99419021862643,
+                  "feesInToken": 612540396699,
+                  "feesInUSD": 0.002630781373570634,
+                  "rewardPoints": 0,
+                  "priceImpact": -0.018155884951531753,
+                  "minimumOutput": 19906385.163306154,
+                  "transaction":
+                    [
+                      {
+                        "to": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+                        "data": "0x095ea7b30000000000000000000000006a2a5b7d0434cc5b77e304bc9d68c20dee8051520000000000000000000000000000000000000000000000000000000001312d00",
+                      },
+                      {
+                        "data": "0xae127b6a0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000af88d065e77c8cc2239327c5edb3a432268e58310000000000000000000000000000000000000000000000000000000001312d00000000000000000000000000f11b27bab53ae31d8e4132e4561bbef0a4cd93a0000000000000000000000000833589fcd6edb6e08f4c7c32d4f71b54bda0291300000000000000000000000000000000000000000000000000000000012fbf510000000000000000000000000000000000000000000000000000000068a45878000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000177b22706172746e65724944223a22666c6970706572227d000000000000000000",
+                        "to": "0x6a2A5B7D0434CC5b77e304bc9D68C20Dee805152",
+                      },
+                    ]
         "400":
           description: Bad request (missing or invalid parameters)
           content:

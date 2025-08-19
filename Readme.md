@@ -18,6 +18,7 @@ const { GasyardSDK } = require("gasyard-sdk");
 // Initialize the SDK
 const sdk = new GasyardSDK({
   apiKey: "your-api-key", // Use 'trial' for testing
+  version: 2, // default is 1
 });
 ```
 
@@ -75,6 +76,10 @@ async function getBridgeQuote() {
       inputTokenAmount: "50000000", // Amount in smallest unit
       inputTokenContract: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", // USDC on Base
       outputTokenContract: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", // USDC on Arbitrum
+      sourceAddress: "0x14fB25f4C1EEf59C07c183df4a8465856Fd4aBc7", // source address for transaction
+      destinationAddress: "0x14fB25f4C1EEf59C07c183df4a8465856Fd4aBc7", // destination address for transaction
+      slippage: 100, // slippage in BPS -  default is 5
+      showBridgeData: true, // default is true
     });
 
     console.log("Bridge quote:", quote);
@@ -86,39 +91,6 @@ async function getBridgeQuote() {
   }
 }
 ```
-
-### 3. Execute Bridge Transaction
-
-Initiate a cross-chain bridge transaction:
-
-```jsx
-async function executeBridge() {
-  try {
-    const bridgeTransaction = await sdk.bridge({
-      sourceNetwork: 2, // Base
-      destinationNetwork: 5, // Hyperliquid
-      tokenOutAddress: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", // Destination token
-      destinationAddress: "0x28172273CC1E0395F3473EC6eD062B6fdFb15940", // Recipient address
-      tokenInAddress: "0x0000000000000000000000000000000000000000", // Native token (ETH)
-      sourceTokenAmount: "15000000", // Amount in smallest unit
-    });
-
-    console.log("Bridge transaction data:", bridgeTransaction);
-
-    // The response contains transaction data that needs to be signed and sent
-    return bridgeTransaction.transaction;
-  } catch (error) {
-    console.error("Error creating bridge transaction:", error);
-  }
-}
-```
-
-<aside>
-💡
-
-Check for allowances before exeucting bridge request on gateway contract for EVM chains
-
-</aside>
 
 ### 4. Check Transaction Status
 
@@ -191,6 +163,10 @@ async function testSDK() {
       inputTokenAmount: "50000000",
       inputTokenContract: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
       outputTokenContract: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+      sourceAddress: "0x14fB25f4C1EEf59C07c183df4a8465856Fd4aBc7",
+      destinationAddress: "0x14fB25f4C1EEf59C07c183df4a8465856Fd4aBc7",
+      slippage: 100,
+      showBridgeData: true,
     });
     console.log("Quote:", JSON.stringify(quote));
   } catch (error) {
@@ -214,21 +190,6 @@ async function testSDK() {
     limit: 10,
   });
   console.log("History:", JSON.stringify(history, null, 2));
-
-  // Test Bridge Transaction with simple network IDs
-  console.log("\nTesting bridge...");
-  const bridgeTransaction = await sdk.bridge({
-    sourceNetwork: 2,
-    destinationNetwork: 5,
-    tokenOutAddress: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
-    destinationAddress: "0x28172273CC1E0395F3473EC6eD062B6fdFb15940",
-    tokenInAddress: "0x0000000000000000000000000000000000000000",
-    sourceTokenAmount: "15000000",
-  });
-  console.log(
-    "Bridge Transaction:",
-    JSON.stringify(bridgeTransaction, null, 2)
-  );
 
   console.log("\nAll tests completed successfully!");
 }
