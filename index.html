@@ -522,10 +522,15 @@
   <body>
     <div class="app">
       <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-          <div class="brand">Gasyard SDK</div>
-          <div class="subtitle">API Documentation</div>
-        </div>
+        <a
+          href="https://gasyard.github.io/gasyard-sdk-documentation/"
+          style="text-decoration: none"
+        >
+          <div class="sidebar-header">
+            <div class="brand">Gasyard SDK</div>
+            <div class="subtitle">API Documentation</div>
+          </div>
+        </a>
         <nav id="nav" class="nav">
           <div class="section-title">Loading…</div>
         </nav>
@@ -771,6 +776,12 @@
                 "data-name": p.name,
                 "data-in": p.in,
               });
+              // Add empty option if default is null
+              if (schema.default === null) {
+                control.appendChild(
+                  el("option", { value: "", text: "Select..." })
+                );
+              }
               schema.enum.forEach((opt) =>
                 control.appendChild(
                   el("option", { value: String(opt), text: String(opt) })
@@ -922,7 +933,8 @@
             const where = i.getAttribute("data-in");
             const name = i.getAttribute("data-name");
             const val = i.value;
-            if (val === "" || val == null) return;
+            // Skip empty values and null defaults
+            if (val === "" || val == null || val === "Select...") return;
             if (where === "path") out.path[name] = val;
             else if (where === "query") out.query[name] = val;
             else if (where === "header") out.header[name] = val;
@@ -939,6 +951,8 @@
               encodeURIComponent(pathParams[k])
             );
           });
+          // Remove empty path parameters (like {txid} when no value is provided)
+          finalPath = finalPath.replace(/\/\{[^}]+\}/g, "");
           const qs = new URLSearchParams();
           Object.entries(queryParams).forEach(([k, v]) => qs.append(k, v));
           const url =
