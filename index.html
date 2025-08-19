@@ -10,6 +10,10 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
@@ -263,6 +267,16 @@
         overflow: auto;
       }
 
+      .code.small .code-content {
+        padding: 12px;
+        font-size: 11px;
+      }
+
+      .code.small .code-header {
+        padding: 6px 12px;
+        font-size: 10px;
+      }
+
       .endpoint-header {
         display: flex;
         align-items: center;
@@ -355,10 +369,14 @@
 
       pre,
       code {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        font-family: "JetBrains Mono", "Fira Code", "Cascadia Code",
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
           "Liberation Mono", "Courier New", monospace;
-        font-size: 12px;
+        font-size: 13px;
+        line-height: 1.5;
+        font-feature-settings: "liga" 1, "calt" 1;
       }
+
       .code {
         background: #0b1220;
         color: #cbd5e1;
@@ -369,6 +387,180 @@
         white-space: pre-wrap;
         word-break: break-word;
         overflow-wrap: anywhere;
+      }
+
+      /* IDE-style code blocks for homepage only */
+      .code-ide {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        border: 1px solid #3c3c3c;
+        border-radius: 8px;
+        padding: 0;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .code-header {
+        background: #2d2d30;
+        border-bottom: 1px solid #3c3c3c;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #cccccc;
+        font-weight: 500;
+      }
+
+      .code-header-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .code-dots {
+        display: flex;
+        gap: 4px;
+      }
+
+      .code-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+      }
+
+      .code-dot.red {
+        background: #ff5f56;
+      }
+      .code-dot.yellow {
+        background: #ffbd2e;
+      }
+      .code-dot.green {
+        background: #27ca3f;
+      }
+
+      .code-filename {
+        font-size: 11px;
+        color: #8a8a8a;
+        margin-left: 12px;
+      }
+
+      .code-content {
+        padding: 16px;
+        overflow-x: auto;
+        white-space: pre;
+        word-break: normal;
+        overflow-wrap: normal;
+        position: relative;
+        background: #1e1e1e;
+      }
+
+      .code-content.with-lines {
+        padding-left: 60px;
+      }
+
+      .code-line-numbers {
+        position: absolute;
+        left: 0;
+        top: 16px;
+        bottom: 16px;
+        width: 50px;
+        background: #252526;
+        border-right: 1px solid #3c3c3c;
+        color: #858585;
+        font-size: 12px;
+        line-height: 1.5;
+        padding: 0 8px;
+        text-align: right;
+        user-select: none;
+        overflow: hidden;
+      }
+
+      .code-line-number {
+        display: block;
+        height: 1.5em;
+      }
+
+      /* Syntax highlighting colors for IDE code blocks */
+      .code-ide .string {
+        color: #ce9178;
+      }
+      .code-ide .number {
+        color: #b5cea8;
+      }
+      .code-ide .boolean {
+        color: #569cd6;
+      }
+      .code-ide .null {
+        color: #569cd6;
+      }
+      .code-ide .key {
+        color: #9cdcfe;
+      }
+      .code-ide .comment {
+        color: #6a9955;
+        font-style: italic;
+      }
+      .code-ide .keyword {
+        color: #c586c0;
+      }
+      .code-ide .function {
+        color: #dcdcaa;
+      }
+      .code-ide .operator {
+        color: #d4d4d4;
+      }
+      .code-ide .punctuation {
+        color: #d4d4d4;
+      }
+
+      /* Table Styles */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0;
+        font-size: 14px;
+        background: #ffffff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      thead {
+        background: #f8fafc;
+        border-bottom: 2px solid #e5e7eb;
+      }
+
+      tbody {
+        background: #ffffff;
+      }
+
+      th {
+        padding: 12px 16px;
+        text-align: left;
+        font-weight: 600;
+        color: #374151;
+        border: 1px solid #e5e7eb;
+        background: #f8fafc;
+        font-size: 13px;
+        letter-spacing: 0.025em;
+      }
+
+      td {
+        padding: 12px 16px;
+        border: 1px solid #e5e7eb;
+        color: #1f2937;
+        vertical-align: top;
+        line-height: 1.5;
+      }
+
+      tr:nth-child(even) {
+        background: #f9fafb;
+      }
+
+      tr:hover {
+        background: #f3f4f6;
       }
 
       .resp-meta {
@@ -512,6 +704,102 @@
         color: #111827;
         border-color: #e5e7eb;
       }
+
+      /* IDE-style code blocks for homepage only - light theme */
+      .code-ide {
+        background: #ffffff;
+        color: #1f2937;
+        border-color: #e5e7eb;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .code-header {
+        background: #f8fafc;
+        border-bottom-color: #e5e7eb;
+        color: #374151;
+      }
+
+      .code-filename {
+        color: #6b7280;
+      }
+
+      .code-content {
+        background: #ffffff;
+      }
+
+      .code-line-numbers {
+        background: #f1f5f9;
+        border-right-color: #e5e7eb;
+        color: #64748b;
+      }
+
+      /* Light theme syntax highlighting for IDE code blocks */
+      .code-ide .string {
+        color: #dc2626;
+      }
+      .code-ide .number {
+        color: #059669;
+      }
+      .code-ide .boolean {
+        color: #2563eb;
+      }
+      .code-ide .null {
+        color: #2563eb;
+      }
+      .code-ide .key {
+        color: #7c3aed;
+      }
+      .code-ide .comment {
+        color: #059669;
+      }
+      .code-ide .keyword {
+        color: #dc2626;
+      }
+      .code-ide .function {
+        color: #d97706;
+      }
+      .code-ide .operator {
+        color: #1f2937;
+      }
+      .code-ide .punctuation {
+        color: #1f2937;
+      }
+
+      /* Light theme table overrides */
+      table {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      thead {
+        background: #f8fafc;
+        border-bottom-color: #e5e7eb;
+      }
+
+      tbody {
+        background: #ffffff;
+      }
+
+      th {
+        background: #f8fafc;
+        color: #374151;
+        border-color: #e5e7eb;
+      }
+
+      td {
+        color: #1f2937;
+        border-color: #e5e7eb;
+      }
+
+      tr:nth-child(even) {
+        background: #f9fafb;
+      }
+
+      tr:hover {
+        background: #f3f4f6;
+      }
+
       .btn.secondary {
         background: #ffffff;
         border: 1px solid #d1d5db;
@@ -581,6 +869,89 @@
         return node;
       }
 
+      function createCodeBlock(content, filename = null, language = null) {
+        const codeContainer = el("div", { class: "code-ide" });
+
+        // Create header with dots and filename
+        const header = el("div", { class: "code-header" });
+        const headerLeft = el("div", { class: "code-header-left" });
+
+        // Add macOS-style dots
+        const dots = el("div", { class: "code-dots" });
+        dots.appendChild(el("div", { class: "code-dot red" }));
+        dots.appendChild(el("div", { class: "code-dot yellow" }));
+        dots.appendChild(el("div", { class: "code-dot green" }));
+        headerLeft.appendChild(dots);
+
+        if (filename) {
+          headerLeft.appendChild(
+            el("div", { class: "code-filename", text: filename })
+          );
+        }
+
+        header.appendChild(headerLeft);
+        codeContainer.appendChild(header);
+
+        // Create content area
+        const contentDiv = el("div", { class: "code-content" });
+
+        // Add line numbers if content has multiple lines
+        const lines = content.split("\n");
+        if (lines.length > 1) {
+          contentDiv.classList.add("with-lines");
+
+          const lineNumbers = el("div", { class: "code-line-numbers" });
+          lines.forEach((_, index) => {
+            lineNumbers.appendChild(
+              el("span", { class: "code-line-number", text: index + 1 })
+            );
+          });
+          contentDiv.appendChild(lineNumbers);
+        }
+
+        // Add syntax highlighting
+        const highlightedContent = highlightSyntax(content, language);
+        const pre = el("pre");
+        pre.innerHTML = highlightedContent;
+        contentDiv.appendChild(pre);
+
+        codeContainer.appendChild(contentDiv);
+        return codeContainer;
+      }
+
+      function highlightSyntax(code, language) {
+        // Simple syntax highlighting for JSON and common patterns
+        if (
+          language === "json" ||
+          code.trim().startsWith("{") ||
+          code.trim().startsWith("[")
+        ) {
+          return code
+            .replace(/"([^"]+)":/g, '<span class="key">"$1"</span>:')
+            .replace(/"([^"]*)"/g, '<span class="string">"$1"</span>')
+            .replace(/\b(true|false)\b/g, '<span class="boolean">$1</span>')
+            .replace(/\b(null)\b/g, '<span class="null">$1</span>')
+            .replace(/\b(\d+\.?\d*)\b/g, '<span class="number">$1</span>');
+        }
+
+        // Basic highlighting for curl commands
+        if (code.includes("curl")) {
+          return code
+            .replace(/\b(curl)\b/g, '<span class="keyword">$1</span>')
+            .replace(
+              /\b(--request|--url|-H)\b/g,
+              '<span class="function">$1</span>'
+            )
+            .replace(/"([^"]*)"/g, '<span class="string">"$1"</span>')
+            .replace(
+              /\b(GET|POST|PUT|DELETE|PATCH)\b/g,
+              '<span class="keyword">$1</span>'
+            );
+        }
+
+        return code;
+      }
+
       function methodBadge(method) {
         return el(
           "span",
@@ -633,7 +1004,12 @@
           mdContainer.innerHTML = html;
           // Style code blocks like the rest of the app
           mdContainer.querySelectorAll("pre").forEach((pre) => {
-            pre.classList.add("code");
+            const codeBlock = createCodeBlock(
+              pre.textContent,
+              "code.md",
+              "markdown"
+            );
+            pre.parentNode.replaceChild(codeBlock, pre);
           });
         } catch (err) {
           mdContainer.innerHTML = "";

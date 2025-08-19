@@ -2,10 +2,6 @@
 
 The Gasyard SDK provides seamless cross-chain bridging capabilities across multiple blockchain networks. This guide will walk you through the complete integration process.
 
-**Swagger API Integration guide can be found here:**
-
-[https://gasyard.github.io/gasyard-sdk-documentation/](https://gasyard.github.io/gasyard-sdk-documentation/)
-
 ## Installation
 
 Install the Gasyard SDK via npm:
