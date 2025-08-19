@@ -59,6 +59,20 @@ paths:
             application/json:
               schema:
                 type: object
+                example:
+                  networkName: Ethereum,
+                  networkChainID: 1,
+                  chainID: 1,
+                  baseToken: ETH,
+                  decimals: 18,
+                  gatewayContract: 0x6a2A5B7D0434CC5b77e304bc9D68C20Dee805,
+                  logoURL: https://api.gasyard.fi/uploads/eth-network.png,
+                  supportedAddress:
+                    {
+                      NATIVE: 0x0000000000000000000000000000000000000000,
+                      USDC: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48,
+                      USDT: 0xdAC17F958D2ee523a2206206994597C13D831ec7,
+                    }
         "400":
           description: Bad request (missing or invalid parameters)
           content:
@@ -159,7 +173,7 @@ paths:
           required: false
           schema:
             type: number
-          description: Slippage for quote in BPS
+          description: Slippage for quote in BPS - default is 5
 
         - in: query
           name: showBridgeData
@@ -185,7 +199,7 @@ paths:
                   rewardPoints: 1.23
                   priceImpact: 0.12
                   minimumOutput: 123
-                  transaction: [data: { "0x123..." }]
+                  transaction: [data: "0x123..."]
         "400":
           description: Bad request (missing or invalid parameters)
           content:
@@ -205,7 +219,7 @@ paths:
         "500":
           description: Internal server error
 
-  /api/sdk/status/{txid}:
+  /api/sdk/v2/status:
     get:
       tags:
         - SDK V2
@@ -218,37 +232,12 @@ paths:
           schema:
             type: string
           description: API key for authentication
-        - in: path
-          name: txid
-          required: false
-          schema:
-            type: string
-            default: null
-          description: "Transaction Document id"
         - in: query
           name: sourceHash
           required: true
           schema:
             type: string
           description: Input Hash
-        - in: query
-          name: sortBy
-          required: false
-          schema:
-            type: number
-          description: Sort 0 for ascending, 1 for descending
-        - in: query
-          name: limit
-          required: false
-          schema:
-            type: number
-          description: Limit per page
-        - in: query
-          name: page
-          required: false
-          schema:
-            type: number
-          description: Page no.
 
       responses:
         "200":
@@ -257,6 +246,26 @@ paths:
             application/json:
               schema:
                 type: object
+                example:
+                  inputTxHash: 0x394441fa2d50e45c9c83958a0966275a7928dda103c1d5419f76c7d627b8014e,
+                  outputTxHash: 0x3a855fe47483948810e997e88cbc587c2b79f0513dd9d4686f12bae4aa50d70f,
+                  managerHash: 0xfb7cf8c2d635a3363aa3a07937d0fba6dc8598f9359284fc11d590bb0ef7be1b,
+                  outputChainAmount: 13566687,
+                  collateral: 13.633588,
+                  minimumOutput: null,
+                  status: success,
+                  solver: 0x0000000000000000000000008263d2e25b25478c93c541fccfc85ea2665b2193,
+                  refundHash: null,
+                  unlockHash: null,
+                  fillTime: null,
+                  inputChainID: 2,
+                  outputChainID: 5,
+                  inputToken: 0x0000000000000000000000000000000000000000000000000000000000000000,
+                  outputToken: 0x000000000000000000000000af88d065e77c8cc2239327c5edb3a432268e5831,
+                  inputChainAmount: 5000000000000000,
+                  inputAddress: 0x00000000000000000000000042af247f6f067acbc5952605844efb8d90150c08,
+                  outputAddress: 0x00000000000000000000000042af247f6f067acbc5952605844efb8d90150c08,
+                  orderID: 0xd6d158f4f2413a868dcb74828b610fcf73b6baa42b5d95c9d68aacda71b24382,
         "400":
           description: Bad request (missing or invalid parameters)
           content:
