@@ -1,187 +1,246 @@
-# Gasyard SDK API Documentation
+# Gasyard-SDK Integration
 
-A modern, interactive API documentation interface for the Gasyard SDK, inspired by platforms like Relay. This documentation provides a clean, professional interface for exploring and testing your API endpoints.
+The Gasyard SDK provides seamless cross-chain bridging capabilities across multiple blockchain networks. This guide will walk you through the complete integration process.
 
-## Features
+**Swagger API Integration guide can be found here:**
 
-### 🎨 Modern Design
+[https://gasyard.github.io/gasyard-sdk-documentation/](https://gasyard.github.io/gasyard-sdk-documentation/)
 
-- Clean, professional interface similar to Relay's documentation
-- Responsive design that works on desktop and mobile devices
-- Custom styling with modern typography and color schemes
+## Installation
 
-### 📱 Interactive Navigation
+Install the Gasyard SDK via npm:
 
-- Sidebar navigation with organized endpoint categories
-- HTTP method badges (GET, POST, PUT, DELETE) with color coding
-- Smooth scrolling to specific endpoints
-- Mobile-friendly collapsible sidebar
-
-### 🔧 Enhanced Functionality
-
-- Interactive API testing directly in the browser
-- Request/response examples
-- Parameter validation
-- Real-time API calls with proper error handling
-
-### 📋 Organized Structure
-
-- Grouped endpoints by SDK version (SDK and SDK V2)
-- Clear endpoint descriptions and parameters
-- Visual hierarchy for better readability
-
-## Getting Started
-
-### Prerequisites
-
-- A web server to serve the files (local or hosted)
-- Your `swagger.yaml` file in the same directory
-
-### Running Locally
-
-1. **Using Python (Simple HTTP Server)**
-
-   ```bash
-   # Python 3
-   python -m http.server 8000
-
-   # Python 2
-   python -m SimpleHTTPServer 8000
-   ```
-
-2. **Using Node.js (http-server)**
-
-   ```bash
-   npx http-server -p 8000
-   ```
-
-3. **Using PHP**
-
-   ```bash
-   php -S localhost:8000
-   ```
-
-4. **Using Live Server (VS Code Extension)**
-   - Install the "Live Server" extension
-   - Right-click on `index.html` and select "Open with Live Server"
-
-### Accessing the Documentation
-
-Open your browser and navigate to:
-
-- `http://localhost:8000` (if using the above methods)
-- Or the URL where you've hosted the files
-
-## File Structure
-
-```
-swagger-ui/
-├── index.html          # Main documentation interface
-├── swagger.yaml        # Your OpenAPI specification
-└── README.md          # This file
+```bash
+npm install gasyard-sdk
 ```
 
-## Customization
+## Quick Start
 
-### Styling
+```jsx
+const { GasyardSDK } = require("gasyard-sdk");
 
-The interface uses custom CSS that can be modified in the `<style>` section of `index.html`. Key customization areas:
-
-- **Colors**: Modify the CSS custom properties for brand colors
-- **Typography**: Change font families and sizes
-- **Layout**: Adjust sidebar width, spacing, and responsive breakpoints
-
-### Navigation
-
-To add or modify navigation items, edit the sidebar HTML structure in `index.html`:
-
-```html
-<div class="nav-section">
-  <div class="nav-section-title">Your Section</div>
-  <a
-    href="#endpoint-id"
-    class="nav-item method"
-    onclick="scrollToEndpoint('endpoint-id')"
-  >
-    <span class="method-badge method-get">GET</span>
-    Endpoint Name
-  </a>
-</div>
-```
-
-### Swagger UI Configuration
-
-Modify the Swagger UI initialization in the JavaScript section:
-
-```javascript
-SwaggerUIBundle({
-  url: "swagger.yaml",
-  dom_id: "#swagger-ui",
-  deepLinking: true,
-  presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
-  // Add more configuration options here
+// Initialize the SDK
+const sdk = new GasyardSDK({
+  apiKey: "your-api-key", // Use 'trial' for testing
 });
 ```
 
-## API Endpoints
+## Supported Networks
 
-### SDK Endpoints
+The SDK supports bridging across the following networks:
 
-- **GET /api/sdk/config** - Get configuration data for bridge tokens
-- **GET /api/sdk/quote** - Get quote data for bridge tokens
-- **GET /api/sdk/bridge** - Initiate bridge transaction
-- **GET /api/sdk/balance** - Get portfolio balance for user address
-- **GET /api/sdk/process-payment-quote** - Get quote for merchant payment
-- **GET /api/sdk/status/{txid}** - Get order status
+| Network         | Gasyard ChainID | Network Chain ID | Base Token         | Supported Tokens | Token Addresses                                                                                                                                                                          |
+| --------------- | --------------- | ---------------- | ------------------ | ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Ethereum**    | 1               | 1                | ETH (18 decimals)  | ETH, USDC, USDT  | `0x0000000000000000000000000000000000000000`, `0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48`, `0xdAC17F958D2ee523a2206206994597C13D831ec7`                                                 |
+| **Base**        | 2               | 8453             | ETH (18 decimals)  | ETH, USDC        | `0x0000000000000000000000000000000000000000`, `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913`                                                                                               |
+| **BNB Chain**   | 3               | 56               | BNB (18 decimals)  | BNB, BNB-USD     | `0x0000000000000000000000000000000000000000`, `0x55d398326f99059fF775485246999027B3197955`                                                                                               |
+| **Arbitrum**    | 4               | 42161            | ETH (18 decimals)  | ETH, USDC        | `0x0000000000000000000000000000000000000000`, `0xaf88d065e77c8cC2239327C5EDb3A432268e5831`                                                                                               |
+| **Hyperliquid** | 5               | 42161            | USDC (18 decimals) | USDC             | `0xaf88d065e77c8cC2239327C5EDb3A432268e5831`                                                                                                                                             |
+| **Movement**    | 6               | 126              | MOVE (8 decimals)  | MOVE, USDT, USDC | `0x0000000000000000000000000000000000000000`, `0x447721a30109c662dde9c73a0c2c9c9c459fb5e5a9c92f03c50fa69737f5d08d`, `0x83121c9f9b0527d1f056e21a950d6bf3b9e9e2e8353d0e95ccea726713cbea39` |
+| **Solana**      | 7               | 1329             | SOL (9 decimals)   | SOL, USDC, USDT  | `0x0000000000000000000000000000000000000000`, `EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`, `Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB`                                             |
+| **Bera**        | 8               | 80094            | BERA (18 decimals) | None             | No supported tokens configured                                                                                                                                                           |
+| **Sei**         | 9               | 1329             | SEI (18 decimals)  | None             | No supported tokens configured                                                                                                                                                           |
+| **Polygon**     | 10              | 137              | POL (18 decimals)  | POL, USDC        | `0x0000000000000000000000000000000000000000`, `0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359`                                                                                               |
 
-### SDK V2 Endpoints
+**Important Notes:**
 
-- **GET /api/sdk/v2/quote** - Enhanced quote endpoint with additional features
-- **GET /api/sdk/v2/bridge** - Enhanced bridge endpoint
+- Use **Gasyard Chain ID** in all SDK method calls (not Network Chain ID)
+- Native tokens always use address `0x0000000000000000000000000000000000000000`
+- Token addresses are listed in the same order as the supported tokens column
 
-## Browser Compatibility
+## Core Methods
 
-- Chrome 60+
-- Firefox 55+
-- Safari 12+
-- Edge 79+
+### 1. Get Network Configuration
 
-## Deployment
+Retrieve all supported networks and their configurations:
 
-### Static Hosting
+```jsx
+async function getNetworkConfig() {
+  try {
+    const config = await sdk.getConfig();
+    console.log("Supported networks:", config);
+    return config;
+  } catch (error) {
+    console.error("Error fetching config:", error);
+  }
+}
+```
 
-You can deploy this documentation to any static hosting service:
+### 2. Get Bridge Quote
 
-- **GitHub Pages**: Push to a repository and enable GitHub Pages
-- **Netlify**: Drag and drop the folder to Netlify
-- **Vercel**: Connect your repository to Vercel
-- **AWS S3**: Upload files to an S3 bucket with static website hosting
+Get a quote for bridging tokens between networks:
 
-### Custom Domain
+```jsx
+async function getBridgeQuote() {
+  try {
+    const quote = await sdk.getQuote({
+      inputNetwork: 2, // Base
+      outputNetwork: 5, // Hyperliquid
+      inputTokenAmount: "50000000", // Amount in smallest unit
+      inputTokenContract: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", // USDC on Base
+      outputTokenContract: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", // USDC on Arbitrum
+    });
 
-To use a custom domain:
+    console.log("Bridge quote:", quote);
+    // Returns: inputTokenAmount, outputTokenAmount, outputValueInUSD, feesInToken, feesInUSD
 
-1. Configure your domain's DNS settings
-2. Update the `servers` section in your `swagger.yaml` file
-3. Deploy to your hosting provider
+    return quote;
+  } catch (error) {
+    console.error("Error getting quote:", error);
+  }
+}
+```
 
-## Contributing
+### 3. Execute Bridge Transaction
 
-To contribute to this documentation:
+Initiate a cross-chain bridge transaction:
 
-1. Fork the repository
-2. Make your changes
-3. Test locally
-4. Submit a pull request
+```jsx
+async function executeBridge() {
+  try {
+    const bridgeTransaction = await sdk.bridge({
+      sourceNetwork: 2, // Base
+      destinationNetwork: 5, // Hyperliquid
+      tokenOutAddress: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", // Destination token
+      destinationAddress: "0x28172273CC1E0395F3473EC6eD062B6fdFb15940", // Recipient address
+      tokenInAddress: "0x0000000000000000000000000000000000000000", // Native token (ETH)
+      sourceTokenAmount: "15000000", // Amount in smallest unit
+    });
 
-## Support
+    console.log("Bridge transaction data:", bridgeTransaction);
 
-For issues or questions:
+    // The response contains transaction data that needs to be signed and sent
+    return bridgeTransaction.transaction;
+  } catch (error) {
+    console.error("Error creating bridge transaction:", error);
+  }
+}
+```
 
-- Check the browser console for JavaScript errors
-- Verify your `swagger.yaml` file is valid
-- Ensure your web server is properly configured
+<aside>
+💡
 
-## License
+Check for allowances before exeucting bridge request on gateway contract for EVM chains
 
-This documentation interface is open source and available under the MIT License.
+</aside>
+
+### 4. Check Transaction Status
+
+Monitor the status of your bridge transaction:
+
+```jsx
+async function checkBridgeStatus(txHash) {
+  try {
+    const status = await sdk.getStatus({
+      sourceHash: txHash,
+    });
+
+    console.log("Transaction status:", status);
+
+    // Status can be: "success", "pending", "failed"
+    // Also includes outputTxHash, fees, collateral info
+
+    return status;
+  } catch (error) {
+    console.error("Error checking status:", error);
+  }
+}
+```
+
+### 5. Get Transaction History
+
+Retrieve bridge transaction history for an address:
+
+```jsx
+async function getBridgeHistory(address) {
+  try {
+    const history = await sdk.getHistory({
+      inputAddress: address,
+      page: 1,
+      limit: 10,
+    });
+
+    console.log("Bridge history:", history);
+
+    // Returns paginated results with transaction details
+    return history;
+  } catch (error) {
+    console.error("Error fetching history:", error);
+  }
+}
+```
+
+## Complete Bridge Implementation
+
+Here's a complete example showing how to implement a cross-chain bridge:
+
+```jsx
+const { GasyardSDK } = require("gasyard-sdk");
+async function testSDK() {
+  const sdk = new GasyardSDK({
+    apiKey: "", // Your API Key
+  });
+
+  // Test Config first to get network objects
+  console.log("\nTesting getConfig...");
+  const configResponse = await sdk.getConfig();
+  console.log("Config:", JSON.stringify(configResponse));
+
+  // Test Quote with simple network IDs
+  console.log("\nTesting getQuote...");
+  try {
+    const quote = await sdk.getQuote({
+      inputNetwork: 2,
+      outputNetwork: 5,
+      inputTokenAmount: "50000000",
+      inputTokenContract: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      outputTokenContract: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+    });
+    console.log("Quote:", JSON.stringify(quote));
+  } catch (error) {
+    console.log(error.toString());
+    console.log(error.message);
+  }
+
+  // Test Status (using a sample transaction hash)
+  console.log("\nTesting getStatus...");
+  const status = await sdk.getStatus({
+    sourceHash:
+      "0x50aa2de06b9a386a6f87ac0c509a088240e129c71503e7c323e4e27f7fcaeec4",
+  });
+  console.log("Status:", JSON.stringify(status, null, 2));
+
+  // Test History (using a sample address)
+  console.log("\nTesting getHistory...");
+  const history = await sdk.getHistory({
+    inputAddress: "0xc5218F7e68f800c45c4BF49D87BE56b6a2692efB",
+    page: 1,
+    limit: 10,
+  });
+  console.log("History:", JSON.stringify(history, null, 2));
+
+  // Test Bridge Transaction with simple network IDs
+  console.log("\nTesting bridge...");
+  const bridgeTransaction = await sdk.bridge({
+    sourceNetwork: 2,
+    destinationNetwork: 5,
+    tokenOutAddress: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+    destinationAddress: "0x28172273CC1E0395F3473EC6eD062B6fdFb15940",
+    tokenInAddress: "0x0000000000000000000000000000000000000000",
+    sourceTokenAmount: "15000000",
+  });
+  console.log(
+    "Bridge Transaction:",
+    JSON.stringify(bridgeTransaction, null, 2)
+  );
+
+  console.log("\nAll tests completed successfully!");
+}
+
+// Run the test
+testSDK();
+```
+
+## API Rate Limits
+
+The trial API key has rate limits. For production use, contact Gasyard for a production API key with higher limits.

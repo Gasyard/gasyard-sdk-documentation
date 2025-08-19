@@ -11,6 +11,7 @@
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
       * {
         box-sizing: border-box;
@@ -65,7 +66,7 @@
       .section-title {
         padding: 16px 20px 8px;
         font-size: 12px;
-        color: #8092b0;
+        color: #111827;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.6px;
@@ -290,7 +291,7 @@
       }
       .section-title {
         font-weight: 700;
-        color: #cbd5e1;
+        color: #111827;
         margin-bottom: 8px;
         font-size: 13px;
         letter-spacing: 0.3px;
@@ -304,7 +305,7 @@
         padding: 6px 0;
       }
       .label {
-        color: #94a3b8;
+        color: #111827;
         font-size: 13px;
       }
       .required {
@@ -315,8 +316,8 @@
       .select-input,
       .textarea {
         width: 100%;
-        background: #0b1220;
-        color: #e5e7eb;
+        background: #eaeaec;
+        color: #090e1a;
         border: 1px solid #334155;
         border-radius: 8px;
         padding: 8px 10px;
@@ -417,6 +418,105 @@
           padding: 16px;
         }
       }
+
+      /* Light theme overrides */
+      body {
+        background: #ffffff;
+        color: #111827;
+      }
+      .sidebar {
+        background: #ffffff;
+        border-right: 1px solid #e5e7eb;
+      }
+      .sidebar-header {
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .brand {
+        color: #111827;
+      }
+      .subtitle {
+        color: #6b7280;
+      }
+      .nav-item {
+        color: #374151;
+      }
+      .nav-item:hover {
+        background: #f3f4f6;
+        color: #111827;
+        border-left-color: #2563eb;
+      }
+      .nav-item.active {
+        background: #eff6ff;
+        color: #2563eb;
+        border-left-color: #2563eb;
+      }
+      .topbar {
+        background: rgba(255, 255, 255, 0.9);
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .title {
+        color: #111827;
+      }
+      .desc {
+        color: #6b7280;
+      }
+      .select,
+      .mobile-toggle {
+        background: #ffffff;
+        color: #111827;
+        border: 1px solid #d1d5db;
+      }
+      .card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+      }
+      .section {
+        border-color: #e5e7eb;
+      }
+      .side-panel {
+        background: #ffffff;
+        border-color: #e5e7eb;
+      }
+      .side-title {
+        color: #111827;
+      }
+      .response-item {
+        border-color: #e5e7eb;
+      }
+      .response-code {
+        background: #f3f4f6;
+        color: #374151;
+        border-color: #e5e7eb;
+      }
+      .response-code.ok {
+        color: #16a34a;
+        border-color: rgba(22, 163, 74, 0.35);
+        background: rgba(22, 163, 74, 0.08);
+      }
+      .response-code.err {
+        color: #dc2626;
+        border-color: rgba(220, 38, 38, 0.35);
+        background: rgba(220, 38, 38, 0.08);
+      }
+      .endpoint-path {
+        color: #111827;
+      }
+      .hint,
+      .empty,
+      .resp-meta {
+        color: #6b7280;
+      }
+      .code {
+        background: #f9fafb;
+        color: #111827;
+        border-color: #e5e7eb;
+      }
+      .btn.secondary {
+        background: #ffffff;
+        border: 1px solid #d1d5db;
+        color: #111827;
+      }
     </style>
   </head>
   <body>
@@ -514,21 +614,37 @@
         }
       }
 
-      // Default short description when nothing is selected
-      function renderWelcome() {
+      // Default cover when nothing is selected: render README.md as HTML
+      async function renderWelcome() {
         const root = document.getElementById("contentRoot");
         root.innerHTML = "";
-        const info = state.spec && state.spec.info ? state.spec.info : {};
-        const title = info.title || "API Overview";
-        const desc =
-          info.description ||
-          "Add a short description for your API here. You can edit info.description in swagger.yaml or change this text in index.html.";
-        const shortDesc = desc.length > 240 ? desc.slice(0, 240) + "…" : desc;
-
         const section = el("div", { class: "section" });
-        section.appendChild(el("div", { class: "section-title", text: title }));
-        section.appendChild(el("div", { class: "hint", text: shortDesc }));
+        section.appendChild(
+          el("div", { class: "section-title", text: "Overview" })
+        );
+        const mdContainer = el("div", { id: "mdRoot" });
+        section.appendChild(mdContainer);
         root.appendChild(section);
+        try {
+          const res = await fetch("Readme.md", { cache: "no-store" });
+          if (!res.ok) throw new Error("Failed to load Readme.md");
+          const md = await res.text();
+          const html =
+            window.marked && window.marked.parse ? window.marked.parse(md) : md;
+          mdContainer.innerHTML = html;
+          // Style code blocks like the rest of the app
+          mdContainer.querySelectorAll("pre").forEach((pre) => {
+            pre.classList.add("code");
+          });
+        } catch (err) {
+          mdContainer.innerHTML = "";
+          const fallback = el(
+            "div",
+            { class: "hint" },
+            String(err) || "Unable to load README."
+          );
+          section.appendChild(fallback);
+        }
       }
 
       function buildServers() {
@@ -580,9 +696,7 @@
         const nav = document.getElementById("nav");
         nav.innerHTML = "";
         const grouped = groupOpsByTag();
-        const tags = Array.from(grouped.keys()).sort((a, b) =>
-          a.localeCompare(b)
-        );
+        const tags = Array.from(grouped.keys());
         if (!tags.length) {
           nav.appendChild(
             el("div", { class: "section-title", text: "No endpoints" })
@@ -591,9 +705,8 @@
         }
         tags.forEach((tag) => {
           nav.appendChild(el("div", { class: "section-title", text: tag }));
-          const ops = grouped
-            .get(tag)
-            .sort((a, b) => a.path.localeCompare(b.path));
+          const ops = grouped.get(tag);
+
           ops.forEach(({ method, path, summary }) => {
             const id = sanitizeId(method + " " + path);
             const link = el("div", { class: "nav-item", role: "button" }, [
@@ -652,14 +765,10 @@
             const schema = p.schema || {};
             const inputId = `param-${idx}`;
             const row = el("div", { class: "form-row" });
-            const label = el(
-              "label",
-              { for: inputId, class: "label" },
-              `${p.name} (${p.in})` +
-                (p.required
-                  ? el("span", { class: "required", text: " *" })
-                  : "")
-            );
+            const label = el("label", { for: inputId, class: "label" }, [
+              `${p.name} (${p.in})`,
+              p.required ? el("span", { class: "required", text: " *" }) : null,
+            ]);
             let control;
             if (schema.enum) {
               control = el("select", {
