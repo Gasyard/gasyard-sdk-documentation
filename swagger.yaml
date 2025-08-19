@@ -19,13 +19,77 @@ tags:
     description: Endpoints related to bridging assets using the Gasyard SDK
 
 paths:
+  /api/sdk/config:
+    get:
+      tags:
+        - SDK V2
+      summary: Config
+      description: Get config data for bridge tokens
+      parameters:
+        - in: header
+          name: x-api-key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication
+        - in: query
+          name: chainID
+          required: false
+          schema:
+            type: integer
+            enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+          description: |
+            Network ID of the source chain. Options:
+            Available options:
+              - 1: Ethereum
+              - 2: Base
+              - 3: BNB
+              - 4: Arbitrum
+              - 5: HyperLiquid
+              - 6: Movement
+              - 7: Solana
+              - 8: Bera
+              - 9: Sei
+              - 10: Polygon
+      responses:
+        "200":
+          description: Successful bridge request
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad request (missing or invalid parameters)
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: error message
+        "401":
+          description: Unauthorized (invalid API key)
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthorized Access
+        "500":
+          description: Internal server error
+
   /api/sdk/v2/quote:
     get:
       tags:
         - SDK V2
-      summary: Get quote
+      summary: Quote
       description: Get quote data for bridge tokens
       parameters:
+        - in: header
+          name: x-api-key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication
         - in: query
           name: outputNetwork
           required: true
@@ -103,13 +167,6 @@ paths:
             type: boolean
           description: Flag to get bridge data - default is True
 
-        - in: header
-          name: x-api-key
-          required: true
-          schema:
-            type: string
-          description: API key for authentication
-
       responses:
         "200":
           description: Successful bridge request
@@ -147,149 +204,53 @@ paths:
         "500":
           description: Internal server error
 
-  /api/sdk/v2/bridge:
+  /api/sdk/status/{txid}:
     get:
       tags:
         - SDK V2
-      summary: Initiate bridge data
-      description: Bridges tokens from source to destination chain using SDK.
+      summary: Order Status
+      description: Get Order Status
       parameters:
-        - in: query
-          name: sourceNetwork
-          required: true
-          schema:
-            type: integer
-            enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-          description: |
-            Network ID of the source chain. Options:
-            Available options:
-              - 1: Ethereum
-              - 2: Base
-              - 3: BNB
-              - 4: Arbitrum
-              - 5: HyperLiquid
-              - 6: Movement
-              - 7: Solana
-              - 8: Bera
-              - 9: Sei
-              - 10: Polygon
-
-        - in: query
-          name: destinationNetwork
-          required: true
-          schema:
-            type: integer
-            enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-          description: Network ID of the destination chain
-
-        - in: query
-          name: tokenOutAddress
-          required: true
-          schema:
-            type: string
-          description: Token address on the destination chain
-
-        - in: query
-          name: destinationAddress
-          required: true
-          schema:
-            type: string
-          description: User wallet address on the destination chain
-
-        - in: query
-          name: tokenInAddress
-          required: true
-          schema:
-            type: string
-          description: Token address on the source chain
-
-        - in: query
-          name: sourceTokenAmount
-          required: true
-          schema:
-            type: string
-          description: Amount of tokens to bridge (in wei)
-
-        - in: query
-          name: sourceAddress
-          required: true
-          schema:
-            type: string
-          description: User wallet address on the source chain
-
         - in: header
           name: x-api-key
           required: true
           schema:
             type: string
           description: API key for authentication
-
-      responses:
-        "200":
-          description: Successful bridge request
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: success
-                  transaction:
-                    data: "0x123..."
-                    to: "0x123.."
-        "400":
-          description: Bad request (missing or invalid parameters)
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: error message
-        "401":
-          description: Unauthorized (invalid API key)
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: Unauthorized Access
-        "500":
-          description: Internal server error
-
-  /api/sdk/config:
-    get:
-      tags:
-        - SDK
-      summary: Get config
-      description: Get config data for bridge tokens
-      parameters:
-        - in: query
-          name: chainID
+        - in: path
+          name: txid
           required: false
           schema:
-            type: integer
-            enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-          description: |
-            Network ID of the source chain. Options:
-            Available options:
-              - 1: Ethereum
-              - 2: Base
-              - 3: BNB
-              - 4: Arbitrum
-              - 5: HyperLiquid
-              - 6: Movement
-              - 7: Solana
-              - 8: Bera
-              - 9: Sei
-              - 10: Polygon
-        - in: header
-          name: x-api-key
+            type: string
+          description: "Transaction Document id"
+        - in: query
+          name: sourceHash
           required: true
           schema:
             type: string
-          description: API key for authentication
+          description: Input Hash
+        - in: query
+          name: sortBy
+          required: false
+          schema:
+            type: number
+          description: Sort 0 for ascending, 1 for descending
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: number
+          description: Limit per page
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: number
+          description: Page no.
+
       responses:
         "200":
-          description: Successful bridge request
+          description: Successful Transaction status
           content:
             application/json:
               schema:
@@ -320,6 +281,12 @@ paths:
       summary: Get quote
       description: Get quote data for bridge tokens
       parameters:
+        - in: header
+          name: x-api-key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication
         - in: query
           name: outputNetwork
           required: true
@@ -369,13 +336,6 @@ paths:
             type: number
           description: Amount of tokens to bridge (in wei)
 
-        - in: header
-          name: x-api-key
-          required: true
-          schema:
-            type: string
-          description: API key for authentication
-
       responses:
         "200":
           description: Successful bridge request
@@ -417,6 +377,13 @@ paths:
       summary: Initiate bridge data
       description: Bridges tokens from source to destination chain using SDK.
       parameters:
+        - in: header
+          name: x-api-key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication
+
         - in: query
           name: sourceNetwork
           required: true
@@ -480,13 +447,6 @@ paths:
             type: string
           description: User wallet address on the source chain
 
-        - in: header
-          name: x-api-key
-          required: true
-          schema:
-            type: string
-          description: API key for authentication
-
       responses:
         "200":
           description: Successful bridge request
@@ -525,18 +485,19 @@ paths:
       summary: Get balance
       description: Get portfolio balance for user Address
       parameters:
-        - in: query
-          name: userAddress
-          required: true
-          schema:
-            type: string
-          description: "address of user "
         - in: header
           name: x-api-key
           required: true
           schema:
             type: string
           description: API key for authentication
+        - in: query
+          name: userAddress
+          required: true
+          schema:
+            type: string
+          description: "address of user "
+
       responses:
         "200":
           description: Successful bridge request
@@ -547,126 +508,6 @@ paths:
                 example:
                   message: success
                   walletAssets: AssetBalance
-        "400":
-          description: Bad request (missing or invalid parameters)
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: error message
-        "401":
-          description: Unauthorized (invalid API key)
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: Unauthorized Access
-        "500":
-          description: Internal server error
-
-  /api/sdk/process-payment-quote:
-    get:
-      tags:
-        - SDK
-      summary: Process Payment Quote
-      description: Get Quote for merchant payment
-      parameters:
-        - in: query
-          name: userAddress
-          required: true
-          schema:
-            type: string
-          description: "address of user"
-        - in: query
-          name: amount
-          required: true
-          schema:
-            type: number
-          description: Amount to be deducted in USD
-        - in: header
-          name: x-api-key
-          required: true
-          schema:
-            type: string
-          description: API key for authentication
-      responses:
-        "200":
-          description: Successful quote request
-          content:
-            application/json:
-              schema:
-                type: object
-        "400":
-          description: Bad request (missing or invalid parameters)
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: error message
-        "401":
-          description: Unauthorized (invalid API key)
-          content:
-            application/json:
-              schema:
-                type: object
-                example:
-                  message: Unauthorized Access
-        "500":
-          description: Internal server error
-
-  /api/sdk/status/{txid}:
-    get:
-      tags:
-        - SDK
-      summary: Order Status
-      description: Get Order Status
-      parameters:
-        - in: path
-          name: txid
-          required: false
-          schema:
-            type: string
-          description: "Transaction Document id"
-        - in: query
-          name: sourceHash
-          required: false
-          schema:
-            type: string
-          description: Input Hash
-        - in: query
-          name: sortBy
-          required: false
-          schema:
-            type: number
-          description: Sort 0 for ascending, 1 for descending
-        - in: query
-          name: limit
-          required: false
-          schema:
-            type: number
-          description: Limit per page
-        - in: query
-          name: page
-          required: false
-          schema:
-            type: number
-          description: Page no.
-        - in: header
-          name: x-api-key
-          required: true
-          schema:
-            type: string
-          description: API key for authentication
-      responses:
-        "200":
-          description: Successful Transaction status
-          content:
-            application/json:
-              schema:
-                type: object
         "400":
           description: Bad request (missing or invalid parameters)
           content:
